@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Paris Tours — Scroll Experience</title>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Playfair+Display:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+
+<!-- Tailwind (Play CDN) -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          sans: ['"DM Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+          serif: ['"Playfair Display"', 'Georgia', 'serif'],
+        },
+        spacing: { '4.5': '1.125rem' },
+        opacity: { '2': '0.02', '4': '0.04' },
+      },
+    },
+  };
+</script>
+
+<style>
+  html { scroll-behavior: smooth; }
+  body { font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif; background:#000; }
+
+  /* Scroll-reveal (replaces framer-motion whileInView) */
+  [data-reveal]{
+    opacity:0; transform:translateY(28px);
+    transition:opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1);
+    will-change:opacity, transform;
+  }
+  [data-reveal="x-"]{ transform:translateX(-30px); }
+  [data-reveal="x+"]{ transform:translateX(30px); }
+  [data-reveal].revealed{ opacity:1; transform:none; }
+
+  .active-scale:active{ transform:scale(.97); }
+  svg{ display:block; }
+</style>
+</head>
+<body class="bg-black">
+
+<!-- ===================== FIXED SCROLL-ANIMATION BACKGROUND ===================== -->
+<div class="fixed inset-0 z-0 pointer-events-none">
+  <img id="frame" src="public/ezgif-8521e911c107656a-jpg/ezgif-frame-001.jpg" alt="" class="w-full h-full object-cover" style="will-change:contents" />
+  <div class="absolute inset-0 bg-black/10"></div>
+  <div class="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/25"></div>
+</div>
+
+<!-- Preloader -->
+<div id="loader" class="fixed inset-0 z-[100] flex items-center justify-center bg-black text-white">
+  <div class="flex flex-col items-center gap-3">
+    <span class="text-xs tracking-[0.3em] uppercase text-white/60">Loading Experience</span>
+    <span class="text-4xl font-serif italic"><span id="pct">0</span>%</span>
+    <div class="w-40 h-[2px] bg-white/10 overflow-hidden rounded-full">
+      <div id="bar" class="h-full bg-white transition-all duration-200" style="width:0%"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PAGE ===================== -->
+<div class="min-h-screen text-white flex flex-col items-center p-4 md:p-6 lg:p-8 font-sans relative overflow-x-hidden selection:bg-white selection:text-black z-10">
+
+  <!-- 1. HERO -->
+  <section id="home" class="w-full max-w-7xl h-[900px] bg-black/30 backdrop-blur-md border border-white/10 rounded-[2.5rem] relative p-6 md:p-8 lg:p-10 flex flex-col justify-between overflow-hidden shadow-2xl mb-16 md:mb-24">
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(255,255,255,0.02),transparent_35%)] pointer-events-none"></div>
+
+    <!-- Nav -->
+    <header class="relative z-40 w-full flex items-center justify-between">
+      <div data-reveal class="flex items-center gap-2 cursor-pointer group" data-nav="Home" data-target="home">
+        <span class="font-bold text-xl md:text-2xl tracking-[0.25em] text-white transition-all group-hover:tracking-[0.3em]">PARIS</span>
+        <span class="font-light text-xs uppercase tracking-widest text-white/60">Tours</span>
+      </div>
+
+      <div class="hidden md:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50">
+        <nav data-reveal class="flex items-center flex-row flex-nowrap whitespace-nowrap bg-white/[0.03] border border-white/10 rounded-full p-1 backdrop-blur-2xl" id="pillNav"></nav>
+      </div>
+
+      <div data-reveal class="flex items-center justify-end gap-3">
+        <button data-menu-open class="bg-white/[0.03] border border-white/10 hover:bg-white/10 active-scale transition-all duration-300 rounded-full px-5 py-2 text-xs lg:text-sm font-medium hidden sm:flex items-center gap-2 cursor-pointer text-white backdrop-blur-md">
+          <span>Explore menu</span>
+        </button>
+        <button data-menu-open class="md:hidden p-2 rounded-full hover:bg-white/10 active-scale transition-all text-white cursor-pointer" data-icon="menu" data-size="20"></button>
+      </div>
+    </header>
+
+    <!-- Hero content -->
+    <div class="flex-grow flex flex-col justify-center items-center z-10 w-full pt-16 md:pt-20 lg:pt-24 my-auto">
+      <main class="relative flex flex-col items-center justify-center w-full text-center max-w-4xl">
+        <h1 data-reveal style="transition-delay:.1s" class="text-3xl sm:text-4xl md:text-[54px] font-normal tracking-tight text-white leading-[1.12] max-w-4xl">
+          <span class="font-serif italic font-light text-white/95">Discover the Magic</span> <br class="hidden md:inline" />
+          <span class="font-sans font-medium">of Paris</span>
+        </h1>
+        <p data-reveal style="transition-delay:.2s" class="text-white/80 text-sm md:text-base max-w-xl mx-auto mt-3.5 leading-relaxed font-normal">
+          Experience the City of Light like never before. From iconic landmarks and romantic streets to world-class cuisine and unforgettable adventures, we create personalized Paris tours for every traveler.
+        </p>
+        <div data-reveal style="transition-delay:.3s" class="mt-5 flex flex-wrap gap-3 items-center justify-center">
+          <button data-scroll="destinations" data-nav-label="Destinations" class="bg-white text-black text-xs md:text-sm font-semibold px-6 py-2.5 rounded-full hover:bg-neutral-100 hover:scale-[1.03] active-scale transition-all duration-300 flex items-center gap-2 group cursor-pointer shadow-lg">
+            <span>Explore Tours</span>
+            <span data-icon="chevron-right" data-size="16" class="transition-transform duration-300 group-hover:translate-x-1"></span>
+          </button>
+          <button data-modal-open class="bg-white/[0.03] text-white hover:bg-white/10 text-xs md:text-sm font-semibold pl-6 pr-2.5 py-1.5 rounded-full border border-white/15 hover:border-white/25 active-scale transition-all duration-300 flex items-center gap-3 cursor-pointer backdrop-blur-md">
+            <span>Book Your Trip</span>
+            <span class="w-7 h-7 rounded-full bg-white flex items-center justify-center text-black" data-icon="arrow-up-right" data-size="16"></span>
+          </button>
+        </div>
+      </main>
+    </div>
+
+    <!-- Hero cards -->
+    <footer class="relative z-10 w-full max-w-[680px] mx-auto mt-auto pt-4 mb-2">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-stretch">
+        <div data-reveal style="transition-delay:.4s" class="bg-white/[0.03] backdrop-blur-3xl border border-white/10 rounded-[1.25rem] p-4 flex flex-col justify-between gap-2.5 transition-all duration-500 hover:border-white/20 hover:bg-white/5 group relative overflow-hidden text-left">
+          <div class="absolute -top-10 -left-10 w-32 h-32 bg-white/2 rounded-full blur-2xl pointer-events-none group-hover:bg-white/4 transition-all duration-500"></div>
+          <div class="flex flex-col gap-2">
+            <div class="w-8 h-8 rounded-lg bg-white flex items-center justify-center shadow-md transition-transform duration-500 group-hover:scale-105 text-black" data-icon="compass" data-size="16"></div>
+            <h2 class="text-sm md:text-base font-bold text-white tracking-tight">Explore the Heart of Paris</h2>
+            <p class="text-white/70 text-xs leading-normal font-light">Discover iconic landmarks, charming streets, world-famous museums, and unforgettable experiences with our expertly guided tours.</p>
+          </div>
+        </div>
+        <div data-reveal style="transition-delay:.5s" class="bg-white/[0.03] backdrop-blur-3xl border border-white/10 rounded-[1.25rem] p-4 flex flex-col justify-between gap-2.5 transition-all duration-500 hover:border-white/20 hover:bg-white/5 group relative overflow-hidden text-left">
+          <div class="absolute -top-10 -right-10 w-32 h-32 bg-white/2 rounded-full blur-2xl pointer-events-none group-hover:bg-white/4 transition-all duration-500"></div>
+          <div class="flex flex-col gap-2">
+            <div class="w-8 h-8 rounded-lg bg-white flex items-center justify-center shadow-md transition-transform duration-500 group-hover:scale-105 text-black" data-icon="sparkles" data-size="16"></div>
+            <h2 class="text-sm md:text-base font-bold text-white tracking-tight">Your Dream Paris Vacation Starts Here</h2>
+            <p class="text-white/70 text-xs leading-normal font-light">From romantic getaways to family adventures, we create personalized travel experiences that make every moment in Paris truly memorable.</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </section>
+
+  <!-- BRAND TRUST -->
+  <section class="w-full max-w-5xl py-20 md:py-28 flex flex-col items-center justify-center text-center relative overflow-hidden border-b border-white/5">
+    <div class="absolute top-1/2 left-[30%] -translate-y-1/2 -translate-x-1/2 w-80 h-80 bg-blue-500/10 rounded-full blur-[110px] pointer-events-none"></div>
+    <div class="absolute top-1/2 right-[30%] -translate-y-1/2 translate-x-1/2 w-80 h-80 bg-red-500/10 rounded-full blur-[110px] pointer-events-none"></div>
+    <div class="relative z-10 flex flex-col items-center max-w-3xl px-4">
+      <h2 data-reveal class="text-4xl sm:text-5xl md:text-[60px] font-normal tracking-tight text-white leading-[1.1] mb-6">
+        <span class="font-serif italic text-white/95 font-light">Proudly Trusted</span><br />
+        <span class="font-sans font-medium">by Leading Brands</span><br />
+        <span class="font-sans font-medium relative inline-block">Across Industries<span class="text-red-500 text-sm md:text-base align-super font-bold select-none ml-0.5">&reg;</span></span>
+      </h2>
+      <p data-reveal style="transition-delay:.1s" class="text-white/60 text-xs md:text-sm max-w-lg leading-relaxed font-normal mb-12">We've partnered with leading brands to deliver innovative and impactful curated experiences.</p>
+      <div data-reveal style="transition-delay:.2s" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 md:gap-12 items-center justify-center w-full mt-2">
+        <div class="group flex flex-col items-center justify-center text-center p-2 cursor-pointer transition-all duration-300 hover:scale-105"><span class="font-serif tracking-[0.3em] font-medium text-lg text-white/70 group-hover:text-white transition-all">LVMH</span><span class="text-[8px] tracking-[0.15em] text-white/30 group-hover:text-white/50 uppercase mt-1.5 block">MOËT HENNESSY LOUIS VUITTON</span></div>
+        <div class="group flex flex-col items-center justify-center text-center p-2 cursor-pointer transition-all duration-300 hover:scale-105"><span class="font-serif tracking-[0.25em] font-bold text-sm text-white/70 group-hover:text-white transition-all">HERMÈS</span><span class="text-[8px] tracking-[0.15em] text-white/30 group-hover:text-white/50 uppercase mt-1.5 block">PARIS</span></div>
+        <div class="group flex flex-col items-center justify-center text-center p-2 cursor-pointer transition-all duration-300 hover:scale-105"><div class="flex flex-col items-center"><span class="tracking-[0.15em] font-extrabold text-xs text-white/70 group-hover:text-white transition-all">AIR FRANCE</span><div class="w-8 h-[1px] bg-red-500 mt-0.5 self-end"></div></div><span class="text-[8px] tracking-[0.15em] text-white/30 group-hover:text-white/50 uppercase mt-1.5 block">KLM</span></div>
+        <div class="group flex flex-col items-center justify-center text-center p-2 cursor-pointer transition-all duration-300 hover:scale-105"><span class="font-serif tracking-[0.2em] italic text-base text-white/70 group-hover:text-white transition-all">Ritz Paris</span><span class="text-[8px] tracking-[0.15em] text-white/30 group-hover:text-white/50 uppercase mt-1.5 block">LUXURY HOTEL</span></div>
+        <div class="group flex flex-col items-center justify-center text-center p-2 cursor-pointer transition-all duration-300 hover:scale-105"><span class="tracking-[0.1em] font-black text-sm text-white/70 group-hover:text-white transition-all">MICHELIN</span><span class="text-[8px] tracking-[0.15em] text-white/30 group-hover:text-white/50 uppercase mt-1.5 block">TRAVEL GUIDE</span></div>
+        <div class="group flex flex-col items-center justify-center text-center p-2 cursor-pointer transition-all duration-300 hover:scale-105"><span class="tracking-[0.05em] font-bold text-xs bg-white/10 px-2 py-1 rounded border border-white/10 text-white/70 group-hover:text-white transition-all">AMEX</span><span class="text-[8px] tracking-[0.15em] text-white/30 group-hover:text-white/50 uppercase mt-1.5 block">PLATINUM</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. ABOUT -->
+  <section id="about" class="w-full max-w-5xl py-12 md:py-16 border-b border-white/5 scroll-mt-10">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+      <div data-reveal="x-" class="md:col-span-5">
+        <span class="text-xs uppercase tracking-widest text-white/50 block mb-2 font-medium">Paris Experts</span>
+        <h2 class="text-3xl md:text-4xl font-normal tracking-tight text-white leading-[1.2]">
+          <span class="font-serif italic font-light text-white/95 block mb-1">Your Trusted</span>
+          <span class="font-sans font-bold block">Paris Travel Experts</span>
+        </h2>
+      </div>
+      <div data-reveal="x+" class="md:col-span-7 space-y-4 text-white/70 text-sm md:text-base leading-relaxed font-light">
+        <p>We are a passionate travel company dedicated to helping visitors experience the true beauty of Paris. Our experienced local guides, carefully planned itineraries, and personalized services ensure every journey is comfortable, exciting, and memorable.</p>
+        <p class="border-l border-white/20 pl-4 italic text-white/80">Whether you're visiting for the first time, celebrating a honeymoon, traveling with family, or exploring solo, we make every moment in Paris unforgettable.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. SERVICES -->
+  <section id="services" class="w-full max-w-5xl py-16 md:py-24 border-b border-white/5 scroll-mt-10">
+    <div data-reveal class="text-center mb-12">
+      <span class="text-xs uppercase tracking-widest text-white/50 block mb-2">Tailored Experiences</span>
+      <h2 class="text-3xl md:text-4xl font-normal tracking-tight text-white leading-tight"><span class="font-serif italic font-light text-white/95">What We</span> <span class="font-sans font-bold">Offer</span></h2>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div data-reveal class="bg-white/[0.02] border border-white/10 rounded-2xl p-6 hover:border-white/20 hover:bg-white/[0.04] transition-all duration-300 group">
+        <div class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center mb-4 text-white group-hover:bg-white group-hover:text-black transition-all duration-300" data-icon="map" data-size="20"></div>
+        <h3 class="text-lg font-bold text-white mb-2">Guided City Tours</h3>
+        <p class="text-white/60 text-sm leading-relaxed">Explore famous attractions with knowledgeable local guides who share history, secrets, and local anecdotes.</p>
+      </div>
+      <div data-reveal style="transition-delay:.05s" class="bg-white/[0.02] border border-white/10 rounded-2xl p-6 hover:border-white/20 hover:bg-white/[0.04] transition-all duration-300 group">
+        <div class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center mb-4 text-white group-hover:bg-white group-hover:text-black transition-all duration-300" data-icon="car" data-size="20"></div>
+        <h3 class="text-lg font-bold text-white mb-2">Luxury Transportation</h3>
+        <p class="text-white/60 text-sm leading-relaxed">Comfortable airport transfers and premium private transportation throughout your stay to guarantee perfect ease.</p>
+      </div>
+      <div data-reveal style="transition-delay:.1s" class="bg-white/[0.02] border border-white/10 rounded-2xl p-6 hover:border-white/20 hover:bg-white/[0.04] transition-all duration-300 group">
+        <div class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center mb-4 text-white group-hover:bg-white group-hover:text-black transition-all duration-300" data-icon="bed" data-size="20"></div>
+        <h3 class="text-lg font-bold text-white mb-2">Hotel Booking</h3>
+        <p class="text-white/60 text-sm leading-relaxed">Choose from carefully selected hotels that match your budget, aesthetic preferences, and perfect location requirements.</p>
+      </div>
+      <div data-reveal class="bg-white/[0.02] border border-white/10 rounded-2xl p-6 hover:border-white/20 hover:bg-white/[0.04] transition-all duration-300 group md:col-span-1">
+        <div class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center mb-4 text-white group-hover:bg-white group-hover:text-black transition-all duration-300" data-icon="sparkles" data-size="20"></div>
+        <h3 class="text-lg font-bold text-white mb-2">Customized Travel Packages</h3>
+        <p class="text-white/60 text-sm leading-relaxed">Create your perfect Paris vacation with personalized, flexible itineraries that focus on what you love.</p>
+      </div>
+      <div data-reveal style="transition-delay:.05s" class="bg-white/[0.02] border border-white/10 rounded-2xl p-6 hover:border-white/20 hover:bg-white/[0.04] transition-all duration-300 group md:col-span-2">
+        <div class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center mb-4 text-white group-hover:bg-white group-hover:text-black transition-all duration-300" data-icon="calendar" data-size="20"></div>
+        <h3 class="text-lg font-bold text-white mb-2">Day Trips</h3>
+        <p class="text-white/60 text-sm leading-relaxed">Visit beautiful destinations near Paris like Versailles, Disneyland Paris, and the historic Champagne region with private round-trip transport and fast-track entry.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. DESTINATIONS -->
+  <section id="destinations" class="w-full max-w-5xl py-16 md:py-24 border-b border-white/5 scroll-mt-10">
+    <div data-reveal class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+      <div>
+        <span class="text-xs uppercase tracking-widest text-white/50 block mb-2">Sightseeing Gems</span>
+        <h2 class="text-3xl md:text-4xl font-normal tracking-tight text-white leading-[1.2]">
+          <span class="font-serif italic font-light text-white/95 block mb-1">Must-Visit Places</span>
+          <span class="font-sans font-bold block">in Paris</span>
+        </h2>
+      </div>
+      <p class="text-white/50 text-sm max-w-xs mt-3 md:mt-0">Hand-picked historical and cultural landmarks we recommend on every single tour package.</p>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <div data-reveal class="bg-white/[0.02] border border-white/10 rounded-2xl p-6 hover:border-white/30 hover:bg-white/[0.04] transition-all duration-300 flex flex-col justify-between group">
+        <div><span class="text-xs font-mono text-white/40 block mb-3">01 / LANDMARK</span><h3 class="text-xl font-bold text-white mb-2">Eiffel Tower</h3><p class="text-white/60 text-sm leading-relaxed font-light mb-6">The world's most famous landmark with breathtaking city views, evening sparkles, and summit access options.</p></div>
+        <div class="flex items-center gap-2 text-white text-xs font-semibold uppercase tracking-wider group-hover:text-white/80"><span>Guided Tour Included</span><span data-icon="check" data-size="16"></span></div>
+      </div>
+      <div data-reveal style="transition-delay:.05s" class="bg-white/[0.02] border border-white/10 rounded-2xl p-6 hover:border-white/30 hover:bg-white/[0.04] transition-all duration-300 flex flex-col justify-between group">
+        <div><span class="text-xs font-mono text-white/40 block mb-3">02 / CULTURE</span><h3 class="text-xl font-bold text-white mb-2">Louvre Museum</h3><p class="text-white/60 text-sm leading-relaxed font-light mb-6">Discover thousands of incredible historic artworks, including the iconic Mona Lisa, with fast-track direct entries.</p></div>
+        <div class="flex items-center gap-2 text-white text-xs font-semibold uppercase tracking-wider group-hover:text-white/80"><span>Fast-track Access</span><span data-icon="check" data-size="16"></span></div>
+      </div>
+      <div data-reveal style="transition-delay:.1s" class="bg-white/[0.02] border border-white/10 rounded-2xl p-6 hover:border-white/30 hover:bg-white/[0.04] transition-all duration-300 flex flex-col justify-between group">
+        <div><span class="text-xs font-mono text-white/40 block mb-3">03 / HISTORY</span><h3 class="text-xl font-bold text-white mb-2">Notre-Dame Cathedral</h3><p class="text-white/60 text-sm leading-relaxed font-light mb-6">A historic masterpiece of Gothic architecture, French religious history, and magnificent stone gargoyles.</p></div>
+        <div class="flex items-center gap-2 text-white text-xs font-semibold uppercase tracking-wider group-hover:text-white/80"><span>External Walk &amp; History</span><span data-icon="check" data-size="16"></span></div>
+      </div>
+      <div data-reveal class="bg-white/[0.02] border border-white/10 rounded-2xl p-6 hover:border-white/30 hover:bg-white/[0.04] transition-all duration-300 flex flex-col justify-between group">
+        <div><span class="text-xs font-mono text-white/40 block mb-3">04 / EXPERIENCE</span><h3 class="text-xl font-bold text-white mb-2">Champs-Élysées</h3><p class="text-white/60 text-sm leading-relaxed font-light mb-6">Enjoy world-famous luxury shopping, lovely Parisian outdoor cafés, and a walk up to the beautiful Arc de Triomphe.</p></div>
+        <div class="flex items-center gap-2 text-white text-xs font-semibold uppercase tracking-wider group-hover:text-white/80"><span>Shopping Escort</span><span data-icon="check" data-size="16"></span></div>
+      </div>
+      <div data-reveal style="transition-delay:.05s" class="bg-white/[0.02] border border-white/10 rounded-2xl p-6 hover:border-white/30 hover:bg-white/[0.04] transition-all duration-300 flex flex-col justify-between group sm:col-span-2 md:col-span-2">
+        <div><span class="text-xs font-mono text-white/40 block mb-3">05 / ROMANCE</span><h3 class="text-xl font-bold text-white mb-2">Seine River Cruise</h3><p class="text-white/60 text-sm leading-relaxed font-light mb-6">Experience the magic of Paris from the scenic waters. Enjoy a relaxing sightseeing cruise with custom dining options during sunset as city monuments illuminate.</p></div>
+        <div class="flex items-center gap-2 text-white text-xs font-semibold uppercase tracking-wider group-hover:text-white/80"><span>Gourmet Dinner Option</span><span data-icon="check" data-size="16"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. INSIGHTS -->
+  <section id="insights" class="w-full max-w-5xl py-16 md:py-24 border-b border-white/5 scroll-mt-10">
+    <div data-reveal class="text-center mb-16">
+      <span class="text-xs uppercase tracking-widest text-white/50 block mb-2 font-medium">By The Numbers</span>
+      <h2 class="text-3xl md:text-4xl font-normal tracking-tight text-white leading-tight"><span class="font-serif italic font-light text-white/95">Exclusive Journey</span> <span class="font-sans font-bold">Insights</span></h2>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+      <div class="lg:col-span-4 flex flex-col gap-6 justify-between">
+        <div data-reveal="x-" class="bg-white/[0.03] backdrop-blur-3xl border border-white/10 rounded-[1.25rem] p-6 flex flex-col justify-between gap-3.5 transition-all duration-500 hover:border-white/20 hover:bg-white/5 group relative overflow-hidden text-left flex-grow">
+          <div class="absolute -top-10 -left-10 w-32 h-32 bg-white/2 rounded-full blur-2xl pointer-events-none group-hover:bg-white/4 transition-all duration-500"></div>
+          <div class="flex flex-col gap-3.5">
+            <div class="w-9 h-9 rounded-xl bg-white flex items-center justify-center shadow-lg text-black transition-transform duration-500 group-hover:scale-105" data-icon="star" data-size="18"></div>
+            <h3 class="text-base font-bold text-white tracking-tight">4.9/5 Average Rating</h3>
+            <p class="text-white/70 text-xs leading-relaxed font-light">Consistently rated five stars by thousands of global travelers for our attention to detail and unmatched local guides.</p>
+          </div>
+        </div>
+        <div data-reveal="x-" style="transition-delay:.1s" class="bg-white/[0.03] backdrop-blur-3xl border border-white/10 rounded-[1.25rem] p-6 flex flex-col justify-between gap-3.5 transition-all duration-500 hover:border-white/20 hover:bg-white/5 group relative overflow-hidden text-left flex-grow">
+          <div class="absolute -top-10 -left-10 w-32 h-32 bg-white/2 rounded-full blur-2xl pointer-events-none group-hover:bg-white/4 transition-all duration-500"></div>
+          <div class="flex flex-col gap-3.5">
+            <div class="w-9 h-9 rounded-xl bg-white flex items-center justify-center shadow-lg text-black transition-transform duration-500 group-hover:scale-105" data-icon="clock" data-size="18"></div>
+            <h3 class="text-base font-bold text-white tracking-tight">24/7 Concierge Support</h3>
+            <p class="text-white/70 text-xs leading-relaxed font-light">Our dedicated Paris team is on call round-the-clock to manage dinner bookings, transport adjustments, and immediate requests.</p>
+          </div>
+        </div>
+      </div>
+      <div data-reveal class="lg:col-span-4 min-h-[280px] lg:min-h-full rounded-[1.25rem] border border-dashed border-white/10 flex items-center justify-center relative overflow-hidden bg-white/[0.01]">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.02),transparent_60%)] pointer-events-none"></div>
+        <span class="text-[10px] font-mono tracking-widest text-white/25 uppercase select-none">Visual Space Reserved</span>
+      </div>
+      <div class="lg:col-span-4 flex flex-col gap-6 justify-between">
+        <div data-reveal="x+" class="bg-white/[0.03] backdrop-blur-3xl border border-white/10 rounded-[1.25rem] p-6 flex flex-col justify-between gap-3.5 transition-all duration-500 hover:border-white/20 hover:bg-white/5 group relative overflow-hidden text-left flex-grow">
+          <div class="absolute -top-10 -right-10 w-32 h-32 bg-white/2 rounded-full blur-2xl pointer-events-none group-hover:bg-white/4 transition-all duration-500"></div>
+          <div class="flex flex-col gap-3.5">
+            <div class="w-9 h-9 rounded-xl bg-white flex items-center justify-center shadow-lg text-black transition-transform duration-500 group-hover:scale-105" data-icon="map-pin" data-size="18"></div>
+            <h3 class="text-base font-bold text-white tracking-tight">150+ Curated Spots</h3>
+            <p class="text-white/70 text-xs leading-relaxed font-light">From famous architectural marvels to secret courtyards and private art galleries only locals know.</p>
+          </div>
+        </div>
+        <div data-reveal="x+" style="transition-delay:.1s" class="bg-white/[0.03] backdrop-blur-3xl border border-white/10 rounded-[1.25rem] p-6 flex flex-col justify-between gap-3.5 transition-all duration-500 hover:border-white/20 hover:bg-white/5 group relative overflow-hidden text-left flex-grow">
+          <div class="absolute -top-10 -right-10 w-32 h-32 bg-white/2 rounded-full blur-2xl pointer-events-none group-hover:bg-white/4 transition-all duration-500"></div>
+          <div class="flex flex-col gap-3.5">
+            <div class="w-9 h-9 rounded-xl bg-white flex items-center justify-center shadow-lg text-black transition-transform duration-500 group-hover:scale-105" data-icon="sparkles" data-size="18"></div>
+            <h3 class="text-base font-bold text-white tracking-tight">100% Tailored Routes</h3>
+            <p class="text-white/70 text-xs leading-relaxed font-light">Every tour itinerary is custom drafted by our dedicated travel architects to fit your schedule and personal passions.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. TESTIMONIALS & CONTACT -->
+  <section id="contact" class="w-full max-w-5xl py-16 md:py-24 scroll-mt-10">
+    <div class="mb-20">
+      <div data-reveal class="text-center mb-12">
+        <span class="text-xs uppercase tracking-widest text-white/50 block mb-2">Reviews</span>
+        <h2 class="text-3xl md:text-4xl font-normal tracking-tight text-white leading-tight"><span class="font-serif italic font-light text-white/95">What Our</span> <span class="font-sans font-bold">Travelers Say</span></h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div data-reveal class="bg-white/[0.02] border border-white/5 rounded-2xl p-6">
+          <div class="flex items-center gap-1 mb-4 text-white" data-stars></div>
+          <p class="text-white/80 text-sm italic leading-relaxed mb-6 font-light">"The trip was perfectly organized. Every detail from fast-track Louvre passes to our comfortable day trips exceeded our expectations."</p>
+          <span class="text-xs font-bold text-white uppercase tracking-wider block">Sarah, USA</span>
+        </div>
+        <div data-reveal style="transition-delay:.05s" class="bg-white/[0.02] border border-white/5 rounded-2xl p-6">
+          <div class="flex items-center gap-1 mb-4 text-white" data-stars></div>
+          <p class="text-white/80 text-sm italic leading-relaxed mb-6 font-light">"Our guide was amazing and deeply knowledgeable. The custom itinerary covered all the must-see attractions without feeling rushed."</p>
+          <span class="text-xs font-bold text-white uppercase tracking-wider block">James, UK</span>
+        </div>
+        <div data-reveal style="transition-delay:.1s" class="bg-white/[0.02] border border-white/5 rounded-2xl p-6">
+          <div class="flex items-center gap-1 mb-4 text-white" data-stars></div>
+          <p class="text-white/80 text-sm italic leading-relaxed mb-6 font-light">"An unforgettable Paris experience! They took care of everything, hotels, private transport, and local guides. Highly recommended."</p>
+          <span class="text-xs font-bold text-white uppercase tracking-wider block">Maria, Spain</span>
+        </div>
+      </div>
+    </div>
+
+    <div data-reveal class="border border-white/10 rounded-[2rem] bg-white/[0.01] overflow-hidden p-6 md:p-10 lg:p-12">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+        <div class="lg:col-span-5 space-y-8">
+          <div>
+            <span class="text-xs uppercase tracking-widest text-[#1A73E8] font-bold block mb-2">Book Your Trip Today</span>
+            <h3 class="text-2xl md:text-3xl font-normal tracking-tight text-white mb-4 leading-[1.2]">
+              <span class="font-serif italic font-light text-white/95 block mb-1">Let's Plan Your</span>
+              <span class="font-sans font-bold block">Paris Adventure</span>
+            </h3>
+            <p class="text-white/70 text-sm md:text-base font-light leading-relaxed">Ready to explore Paris? Contact our travel experts today and let us design the perfect vacation just for you.</p>
+          </div>
+          <div class="space-y-4">
+            <div class="flex items-center gap-4"><div class="w-9 h-9 bg-white/5 border border-white/10 rounded-lg flex items-center justify-center text-white flex-shrink-0" data-icon="phone" data-size="16"></div><div><p class="text-xs text-white/50">Phone Number</p><p class="text-sm font-semibold text-white">+33 1 23 45 67 89</p></div></div>
+            <div class="flex items-center gap-4"><div class="w-9 h-9 bg-white/5 border border-white/10 rounded-lg flex items-center justify-center text-white flex-shrink-0" data-icon="mail" data-size="16"></div><div><p class="text-xs text-white/50">Email Address</p><p class="text-sm font-semibold text-white">info@paristravel.com</p></div></div>
+            <div class="flex items-center gap-4"><div class="w-9 h-9 bg-white/5 border border-white/10 rounded-lg flex items-center justify-center text-white flex-shrink-0" data-icon="map-pin" data-size="16"></div><div><p class="text-xs text-white/50">Address</p><p class="text-sm font-semibold text-white">Paris, France</p></div></div>
+            <div class="flex items-center gap-4"><div class="w-9 h-9 bg-white/5 border border-white/10 rounded-lg flex items-center justify-center text-white flex-shrink-0" data-icon="clock" data-size="16"></div><div><p class="text-xs text-white/50">Opening Hours</p><p class="text-sm font-semibold text-white">Monday – Saturday: 9:00 AM – 6:00 PM</p></div></div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7 bg-white/[0.02] border border-white/10 rounded-2xl p-6 md:p-8">
+          <h4 class="text-lg font-bold text-white mb-6">Quick Travel Inquiry</h4>
+          <form id="inquiryForm" class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div><label class="block text-[11px] font-semibold text-white/80 uppercase tracking-wider mb-2">Your Name</label><input type="text" required placeholder="e.g. John Doe" class="w-full bg-white/5 border border-white/10 focus:border-white/30 rounded-xl py-2.5 px-4 text-xs text-white placeholder-white/30 outline-none transition-colors" /></div>
+              <div><label class="block text-[11px] font-semibold text-white/80 uppercase tracking-wider mb-2">Email Address</label><input type="email" required placeholder="e.g. johndoe@gmail.com" class="w-full bg-white/5 border border-white/10 focus:border-white/30 rounded-xl py-2.5 px-4 text-xs text-white placeholder-white/30 outline-none transition-colors" /></div>
+            </div>
+            <div><label class="block text-[11px] font-semibold text-white/80 uppercase tracking-wider mb-2">Trip Duration</label>
+              <select class="w-full bg-neutral-900 border border-white/10 focus:border-white/30 rounded-xl py-2.5 px-4 text-xs text-white outline-none transition-colors">
+                <option value="3days">3 Days - Quick Highlights</option>
+                <option value="5days">5 Days - Standard Experience</option>
+                <option value="7days+">7+ Days - Deep Exploration</option>
+              </select>
+            </div>
+            <div><label class="block text-[11px] font-semibold text-white/80 uppercase tracking-wider mb-2">Message or Special Requests</label><textarea rows="3" placeholder="Tell us about your dream trip (e.g. hotel standards, must-see places)..." class="w-full bg-white/5 border border-white/10 focus:border-white/30 rounded-xl py-2.5 px-4 text-xs text-white placeholder-white/30 outline-none transition-colors resize-none"></textarea></div>
+            <button type="submit" class="w-full bg-white text-black font-semibold py-3 rounded-xl hover:bg-neutral-100 active-scale transition-all duration-200 cursor-pointer text-xs uppercase tracking-wider flex items-center justify-center gap-2">
+              <span data-inquiry-label class="flex items-center gap-2"><span>Submit Paris Inquiry</span><span data-icon="arrow-up-right" data-size="16"></span></span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="w-full max-w-5xl py-8 mt-12 text-center border-t border-white/5 text-xs text-white/40">
+    <p>© 2026 Paris Tours. All rights reserved. Elegant Minimal Travel Guide designed with pure white DM Sans elements.</p>
+  </footer>
+</div>
+
+<!-- ===================== MOBILE MENU DRAWER ===================== -->
+<div id="drawerRoot" class="fixed inset-0 z-50 hidden">
+  <div id="drawerBackdrop" class="absolute inset-0 bg-black/80 backdrop-blur-lg opacity-0 transition-opacity duration-300"></div>
+  <div id="drawerPanel" class="absolute top-0 right-0 bottom-0 w-full sm:w-96 bg-neutral-950 border-l border-white/10 p-8 flex flex-col justify-between translate-x-full transition-transform duration-300">
+    <div>
+      <div class="flex items-center justify-between mb-12">
+        <span class="font-bold text-xl tracking-[0.25em] text-white">PARIS TOURS</span>
+        <button data-menu-close class="p-2 rounded-full hover:bg-white/10 active-scale transition-all text-white cursor-pointer" data-icon="x" data-size="20"></button>
+      </div>
+      <div id="drawerLinks" class="flex flex-col gap-6"></div>
+    </div>
+    <div class="flex flex-col gap-4 text-white/60 text-sm">
+      <div class="flex items-center gap-3"><span class="text-white" data-icon="mail" data-size="16"></span><span>info@paristravel.com</span></div>
+      <div class="flex items-center gap-3"><span class="text-white" data-icon="phone" data-size="16"></span><span>+33 1 23 45 67 89</span></div>
+      <div class="flex items-center gap-3"><span class="text-white" data-icon="map-pin" data-size="16"></span><span>Paris, France</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== BOOKING MODAL ===================== -->
+<div id="modalRoot" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+  <div id="modalBackdrop" class="absolute inset-0 bg-black/85 backdrop-blur-md opacity-0 transition-opacity duration-300"></div>
+  <div id="modalBox" class="relative w-full max-w-lg bg-neutral-900 border border-white/10 rounded-3xl p-8 overflow-hidden opacity-0 scale-95 translate-y-5 transition-all duration-300">
+    <button data-modal-close class="absolute top-4 right-4 p-2 rounded-full hover:bg-white/10 text-white/70 hover:text-white transition-colors cursor-pointer" data-icon="x" data-size="20"></button>
+
+    <div id="bookingForm">
+      <div class="flex items-center gap-2 mb-2"><span class="text-white" data-icon="sparkles" data-size="16"></span><span class="text-xs uppercase tracking-wider text-white/60 font-bold">Personalized tours</span></div>
+      <h3 class="text-2xl font-bold text-white mb-2">Book Your Dream Trip</h3>
+      <p class="text-white/70 text-sm mb-6">Tell us about your preferences and our tour architects will design a bespoke Paris tour itinerary.</p>
+      <form id="modalForm" class="space-y-4">
+        <div><label class="block text-xs font-semibold text-white/80 uppercase tracking-wider mb-2">Your Name</label><input id="mName" type="text" required placeholder="e.g. John Doe" class="w-full bg-white/5 border border-white/10 focus:border-white/30 rounded-xl py-3 px-4 text-sm text-white placeholder-white/30 outline-none transition-colors" /></div>
+        <div><label class="block text-xs font-semibold text-white/80 uppercase tracking-wider mb-2">Email Address</label><input id="mEmail" type="email" required placeholder="e.g. johndoe@travel.com" class="w-full bg-white/5 border border-white/10 focus:border-white/30 rounded-xl py-3 px-4 text-sm text-white placeholder-white/30 outline-none transition-colors" /></div>
+        <div><label class="block text-xs font-semibold text-white/80 uppercase tracking-wider mb-2">Preferred Tour Standard</label>
+          <div class="grid grid-cols-3 gap-2" id="tripTypeGroup">
+            <button type="button" data-trip="Guided Tours" class="py-2 px-3 text-xs font-semibold rounded-xl border transition-all cursor-pointer bg-white text-black border-white">Guided Tours</button>
+            <button type="button" data-trip="Luxury Stay" class="py-2 px-3 text-xs font-semibold rounded-xl border transition-all cursor-pointer bg-white/5 text-white/70 border-white/10 hover:border-white/20">Luxury Stay</button>
+            <button type="button" data-trip="Customized" class="py-2 px-3 text-xs font-semibold rounded-xl border transition-all cursor-pointer bg-white/5 text-white/70 border-white/10 hover:border-white/20">Customized</button>
+          </div>
+        </div>
+        <button type="submit" class="w-full bg-white text-black font-semibold py-3 rounded-xl hover:bg-neutral-100 active-scale transition-all duration-200 mt-6 cursor-pointer flex items-center justify-center gap-2 text-sm uppercase tracking-wider"><span>Reserve Custom Trip</span><span data-icon="arrow-up-right" data-size="16"></span></button>
+      </form>
+    </div>
+
+    <div id="bookingSuccess" class="hidden py-12 flex-col items-center text-center">
+      <div class="w-16 h-16 bg-white text-black rounded-full flex items-center justify-center mb-6" data-icon="check" data-size="32"></div>
+      <h3 class="text-2xl font-bold text-white mb-2">Booking Requested!</h3>
+      <p class="text-white/70 text-sm max-w-sm mb-1">Merci beaucoup, <span id="successName" class="text-white font-medium"></span>.</p>
+      <p class="text-white/50 text-xs">We've sent the details to <span id="successEmail" class="text-white/70"></span>. A Paris tour architect will email you within 24 hours.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------- Icons (inline lucide SVG paths) ---------- */
+const ICONS = {
+  menu:'<line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/>',
+  x:'<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+  'arrow-up-right':'<path d="M7 7h10v10"/><path d="M7 17 17 7"/>',
+  'chevron-right':'<path d="m9 18 6-6-6-6"/>',
+  check:'<path d="M20 6 9 17l-5-5"/>',
+  star:'<path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/>',
+  compass:'<path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z"/><circle cx="12" cy="12" r="10"/>',
+  sparkles:'<path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/>',
+  car:'<path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/>',
+  bed:'<path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/>',
+  calendar:'<path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/>',
+  phone:'<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>',
+  mail:'<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>',
+  clock:'<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+  'map-pin':'<path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/>',
+  map:'<path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z"/><path d="M15 5.764v15"/><path d="M9 3.236v15"/>',
+};
+function svg(name, size){
+  const s = size || 20;
+  const fill = name === 'star' ? 'currentColor' : 'none';
+  return '<svg xmlns="http://www.w3.org/2000/svg" width="'+s+'" height="'+s+'" viewBox="0 0 24 24" fill="'+fill+'" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+(ICONS[name]||'')+'</svg>';
+}
+document.querySelectorAll('[data-icon]').forEach(el=>{
+  el.innerHTML = svg(el.getAttribute('data-icon'), parseInt(el.getAttribute('data-size')||'20',10));
+});
+document.querySelectorAll('[data-stars]').forEach(el=>{
+  el.innerHTML = Array(5).fill(svg('star',16)).join('');
+});
+
+/* ---------- Navigation ---------- */
+const NAV = [
+  {label:'Home', id:'home'},
+  {label:'About us', id:'about'},
+  {label:'Services', id:'services'},
+  {label:'Destinations', id:'destinations'},
+  {label:'Insights', id:'insights'},
+  {label:'Contact', id:'contact'},
+];
+let activeTab = 'Home';
+const pillNav = document.getElementById('pillNav');
+const drawerLinks = document.getElementById('drawerLinks');
+
+function renderNav(){
+  pillNav.innerHTML = NAV.map(it=>{
+    const on = activeTab===it.label;
+    return '<button data-nav="'+it.label+'" data-target="'+it.id+'" class="relative px-4 py-1.5 text-xs lg:text-sm font-medium transition-colors duration-300 rounded-full cursor-pointer flex-shrink-0 '+(on?'bg-white text-black':'text-white hover:text-white/70')+'">'+it.label+'</button>';
+  }).join('');
+  drawerLinks.innerHTML = NAV.map(it=>'<button data-nav="'+it.label+'" data-target="'+it.id+'" data-drawer-link class="text-left text-2xl font-semibold hover:text-white/70 transition-colors py-2 text-white border-b border-white/5 cursor-pointer">'+it.label+'</button>').join('');
+}
+renderNav();
+
+function goTo(id, label){
+  activeTab = label; renderNav();
+  const el = document.getElementById(id);
+  if(el) el.scrollIntoView({behavior:'smooth'});
+}
+document.addEventListener('click', e=>{
+  const nav = e.target.closest('[data-nav]');
+  if(nav){ goTo(nav.getAttribute('data-target'), nav.getAttribute('data-nav')); if(nav.hasAttribute('data-drawer-link')) closeDrawer(); return; }
+  const sc = e.target.closest('[data-scroll]');
+  if(sc){ goTo(sc.getAttribute('data-scroll'), sc.getAttribute('data-nav-label')); return; }
+});
+
+/* Scrollspy: highlight the section currently in view */
+const spy = new IntersectionObserver(entries=>{
+  entries.forEach(en=>{
+    if(en.isIntersecting){
+      const item = NAV.find(n=>n.id===en.target.id);
+      if(item && item.label!==activeTab){ activeTab=item.label; renderNav(); }
+    }
+  });
+},{rootMargin:'-45% 0px -50% 0px', threshold:0});
+NAV.forEach(n=>{ const s=document.getElementById(n.id); if(s) spy.observe(s); });
+
+/* ---------- Mobile drawer ---------- */
+const drawerRoot=document.getElementById('drawerRoot');
+const drawerBackdrop=document.getElementById('drawerBackdrop');
+const drawerPanel=document.getElementById('drawerPanel');
+function openDrawer(){
+  drawerRoot.classList.remove('hidden');
+  requestAnimationFrame(()=>{ drawerBackdrop.classList.add('opacity-100'); drawerPanel.classList.remove('translate-x-full'); });
+}
+function closeDrawer(){
+  drawerBackdrop.classList.remove('opacity-100'); drawerPanel.classList.add('translate-x-full');
+  setTimeout(()=>drawerRoot.classList.add('hidden'),300);
+}
+document.querySelectorAll('[data-menu-open]').forEach(b=>b.addEventListener('click',openDrawer));
+document.querySelectorAll('[data-menu-close]').forEach(b=>b.addEventListener('click',closeDrawer));
+drawerBackdrop.addEventListener('click',closeDrawer);
+
+/* ---------- Booking modal ---------- */
+const modalRoot=document.getElementById('modalRoot');
+const modalBackdrop=document.getElementById('modalBackdrop');
+const modalBox=document.getElementById('modalBox');
+const bookingForm=document.getElementById('bookingForm');
+const bookingSuccess=document.getElementById('bookingSuccess');
+function openModal(){
+  modalRoot.classList.remove('hidden'); modalRoot.classList.add('flex');
+  requestAnimationFrame(()=>{
+    modalBackdrop.classList.add('opacity-100');
+    modalBox.classList.remove('opacity-0','scale-95','translate-y-5');
+  });
+}
+function closeModal(){
+  modalBackdrop.classList.remove('opacity-100');
+  modalBox.classList.add('opacity-0','scale-95','translate-y-5');
+  setTimeout(()=>{ modalRoot.classList.add('hidden'); modalRoot.classList.remove('flex'); },300);
+}
+document.querySelectorAll('[data-modal-open]').forEach(b=>b.addEventListener('click',openModal));
+document.querySelectorAll('[data-modal-close]').forEach(b=>b.addEventListener('click',closeModal));
+modalBackdrop.addEventListener('click',closeModal);
+
+/* trip type toggle */
+let tripType='Guided Tours';
+document.getElementById('tripTypeGroup').addEventListener('click',e=>{
+  const b=e.target.closest('[data-trip]'); if(!b) return;
+  tripType=b.getAttribute('data-trip');
+  document.querySelectorAll('#tripTypeGroup [data-trip]').forEach(btn=>{
+    const on=btn===b;
+    btn.className='py-2 px-3 text-xs font-semibold rounded-xl border transition-all cursor-pointer '+(on?'bg-white text-black border-white':'bg-white/5 text-white/70 border-white/10 hover:border-white/20');
+  });
+});
+document.getElementById('modalForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  document.getElementById('successName').textContent=document.getElementById('mName').value;
+  document.getElementById('successEmail').textContent=document.getElementById('mEmail').value;
+  bookingForm.classList.add('hidden');
+  bookingSuccess.classList.remove('hidden'); bookingSuccess.classList.add('flex');
+  setTimeout(()=>{
+    closeModal();
+    setTimeout(()=>{ bookingForm.classList.remove('hidden'); bookingSuccess.classList.add('hidden'); bookingSuccess.classList.remove('flex'); document.getElementById('modalForm').reset(); },300);
+  },3000);
+});
+
+/* inquiry form */
+document.getElementById('inquiryForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const label=document.querySelector('[data-inquiry-label]');
+  label.innerHTML='<span style="color:#16a34a">'+svg('check',16)+'</span><span>Inquiry Sent!</span>';
+  setTimeout(()=>{ label.innerHTML='<span>Submit Paris Inquiry</span>'+svg('arrow-up-right',16); e.target.reset(); },3000);
+});
+
+/* ---------- Scroll reveal ---------- */
+const reveal = new IntersectionObserver(entries=>{
+  entries.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('revealed'); reveal.unobserve(en.target); } });
+},{threshold:0.12});
+document.querySelectorAll('[data-reveal]').forEach(el=>reveal.observe(el));
+
+/* ---------- Scroll-driven frame animation ---------- */
+(function(){
+  const FRAME_COUNT=300;
+  const DIR='public/ezgif-8521e911c107656a-jpg/';
+  const pad=n=>String(n).padStart(3,'0');
+  const src=i=>DIR+'ezgif-frame-'+pad(i)+'.jpg';
+
+  const img=document.getElementById('frame');
+  const loader=document.getElementById('loader');
+  const pctEl=document.getElementById('pct');
+  const bar=document.getElementById('bar');
+
+  const images=[]; let loaded=0;
+  for(let i=1;i<=FRAME_COUNT;i++){
+    const im=new Image();
+    im.onload=im.onerror=()=>{
+      loaded++;
+      const p=Math.round(loaded/FRAME_COUNT*100);
+      pctEl.textContent=p; bar.style.width=p+'%';
+      if(loaded===FRAME_COUNT) start();
+    };
+    im.src=src(i); images[i]=im;
+  }
+
+  let current=0, target=0, started=false;
+  function start(){
+    if(started) return; started=true;
+    loader.style.transition='opacity .4s ease'; loader.style.opacity='0';
+    setTimeout(()=>loader.remove(),400);
+    window.addEventListener('scroll',onScroll,{passive:true});
+    window.addEventListener('resize',onScroll);
+    onScroll(); requestAnimationFrame(render);
+  }
+  function onScroll(){
+    const doc=document.documentElement;
+    const scrollable=doc.scrollHeight-window.innerHeight;
+    const p=scrollable>0?window.scrollY/scrollable:0;
+    target=Math.min(1,Math.max(0,p))*(FRAME_COUNT-1);
+  }
+  function render(){
+    current+=(target-current)*0.12;
+    const idx=Math.round(current)+1;
+    if(images[idx]&&img.src!==images[idx].src) img.src=images[idx].src;
+    requestAnimationFrame(render);
+  }
+})();
+</script>
+</body>
+</html>
